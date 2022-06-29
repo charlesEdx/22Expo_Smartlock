@@ -12,7 +12,7 @@ UART baud rate 固定為 9600。
 Windows UART 控制程式是參考 [15.6. Example serial code for Windows in C](https://www.pololu.com/docs/0J73/15.6) 這一篇改的。
 
 在 Windows 下用 MINGW64 編譯：
-> 'gcc -o uart_ledctrl uart_led_ctrl.c`
+> `gcc -o uart_ledctrl uart_led_ctrl.c`
 
 ### 使用方式
 ```
