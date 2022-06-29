@@ -11,6 +11,9 @@
 #define LED_7				8
 #define LED_8				9
 
+#define PIN_FEMODE			10
+
+
 
 void setup() {
 	Serial.begin(9600);
@@ -21,6 +24,9 @@ void setup() {
 		delay(1000);
 		digitalWrite(led, LED_OFF_LEVEL);
 	}
+
+	// FEMODE 常態斷開 -- tri-state (設定為 input)
+	pinMode(PIN_FEMODE, INPUT);
 }
 
 
@@ -38,6 +44,22 @@ void loop() {
 		int data = Serial.read();  // 讀取進來的 byte
 		Serial.print("data= "); Serial.println(data, HEX);
 		switch (data) {            // 根據收到的字元決定要打開哪顆 LED
+		case 0xFE:
+			//-- LOW 導通 tack switch
+			//-----------------------------------
+			//-- PRE-SET Normal -- TRT-STATE
+			pinMode(PIN_FEMODE, INPUT);	// 設定為斷開，TRISTATE
+			delay(50);
+			Serial.println("PIN_FEMODE: INPUT");
+			//-- LOW 300ms
+			digitalWrite(PIN_FEMODE, LOW);
+			pinMode(PIN_FEMODE, OUTPUT);
+			delay(200);
+			Serial.println("PIN_FEMODE: OUTPUT-LOW");
+			//-- Resume Normal state
+			pinMode(PIN_FEMODE, INPUT);
+			Serial.println("PIN_FEMODE: INPUT");
+			break;
 		case 0x10:	// LED#1 Off
 			digitalWrite(LED_1, LED_OFF_LEVEL);
 			Serial.println("LED-1 OFF");
@@ -113,6 +135,5 @@ void loop() {
 		}
 	}
 
-	// flashLed(led_cycle);
-	flashLed(100);
+	//flashLed(100);
 }
